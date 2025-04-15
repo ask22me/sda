@@ -1,42 +1,30 @@
-# Chatbot Project
+# Grant KeyVault Access To Azure VM
 
-## RAG Chatbot with Chat History
+## 1. Set up System Managed Identity for VM
+1. Navigate to your Azure VM and click `Security` then `Identity`.
 
-### Stage Introduction
+2. In the *System assigned* tab change the status to **ON**, and then click `Save`.
 
-A **RAG (Retrieval-Augmented Generation) chatbot** using Streamlit and FastAPI. At this stage, we introduce the ability for users to upload PDF files in addition to regular chatting. This allows them to ask questions specifically about the content of those documents.
+   ![vm-identity](img/vm-identity.png)
 
-![stage1-4](https://weclouddata.s3.us-east-1.amazonaws.com/cloud/project-stages/stage1-4.png)
+## 2. Grant KeyVault Access
 
-Under the hood, the system uses a **vector store (Chroma)** to retrieve the most relevant context from uploaded PDFs. This retrieval step enhances the chatbot’s ability to provide accurate, context-aware answers, bridging the gap between simple conversation and document-focused queries.
+1. Navigate to your Azure VM and click `Access control(IAM)`.
 
-This enhancement integrates seamlessly with our existing setup—Streamlit for the user interface, FastAPI for business logic, and PostgreSQL for data storage—while laying the foundation for further expansion.
+2. Click `+Add` and then click `Add role assignment`.
 
-> **Note:** Some LLM-related concepts introduced in this stage may seem complex. However, our main goal is to get the project running, and fully understanding the LLM integration is **optional**. If you’re interested, feel free to explore the code and additional resources to enhance your project, but don’t worry if you don’t grasp everything right away.
+   ![kv-addrole](img/kv-addrole.png)
 
----
+3. In the *Role* tab, search and select `Key Vault Secrets User`.
 
-### How to Get Started
+   ![kv-selectrole](img/kv-selectrole.png)
 
-#### **Step 1: Set Up Environment Variables**
-Store your `OPENAI_API_KEY`, **Database Credentials** and **Storage SAS token** in a `.env` file.
+4. Switch to the *Members* tab, for the `Assign access to` select `Managed identity`, and then click `+Select members`. Then in the pop-up window, select the **Subscription of your VM**, and then choose **`Virtual machine`** for the `Managed identity`, then click the **name of your VM**. Click `Select` once you selected your VM.
 
-Your `.env` file should look like this:
+   ![kv-selectmember](img/kv-selectmember.png)
 
-```env
-OPENAI_API_KEY=
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
-DB_HOST=
-DB_PORT=
-AZURE_STORAGE_SAS_URL=
-AZURE_STORAGE_CONTAINER=
-```
+5. Finally click the `Review + assign` to finish the assignment.
 
-#### **Step 2: Start Sartup Script**
+6. Now in the *Role assignments* tab, you can see that the VM is already have the access. It should be under the *Key Vault Secrets User* section.
 
-```bash
-chmod +x setup.sh
-./setup.sh <PAT_token> <repo_url> <branch_name> <password>
-```
+   ![kv-check](img/kv-check.png)
