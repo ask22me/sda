@@ -3,7 +3,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure Functions: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python project to Azure Function App - backend-service-2025
+name: Build and deploy Python project to Azure Function App - stage7af
 
 on:
   push:
@@ -76,13 +76,13 @@ jobs:
 
       - name: Set Application Settings
         run: |
-          az functionapp config appsettings set --name backend-service-2025 --resource-group DemoVmSDA --settings "FUNCTIONS_WORKER_RUNTIME=python" "KEY_VAULT_NAME=sdakeyvault2025" "APPINSIGHTS_INSTRUMENTATIONKEY=azurerm_application_insights.ai.instrumentation_key"
+          az functionapp config appsettings set --name stage7af --resource-group sda-demo-7 --settings "FUNCTIONS_WORKER_RUNTIME=python" "KEY_VAULT_NAME=sdakeyvault20250" "APPINSIGHTS_INSTRUMENTATIONKEY=azurerm_application_insights.ai.instrumentation_key"
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: 'backend-service-2025'
+          app-name: 'stage7af'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           scm-do-build-during-deployment: true
