@@ -37,14 +37,16 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # Update the VM with secure token passing
-    - name: Azure VM Update
+    # Update the VMSS with secure token passing
+    - name: Azure VMSS Update
       run: |
-        az vm extension set \
+        az vmss extension set \
           --resource-group ${{ secrets.RESOURCE_GROUP }} \
-          --vm-name ${{ secrets.VM_NAME }} \
+          --vmss-name ${{ secrets.VMSS_NAME }} \
           --name CustomScript \
-          --force-update \
           --publisher Microsoft.Azure.Extensions \
-          --settings '{"fileUris": []}' \
-          --protected-settings '{"commandToExecute": "export GITHUB_TOKEN=${{ secrets.TOKEN }} && sudo -u azureuser bash /home/azureuser/chatbot-project/update_app.sh"}'
+          --type CustomScript \
+          --type-handler-version 2.1 \
+          --force-update \
+          --settings '{}' \
+          --protected-settings '{"commandToExecute": "export GITHUB_TOKEN=${{ secrets.TOKEN }} && sudo -u azureuser bash /home/azureuser/sda/update_app.sh"}'
